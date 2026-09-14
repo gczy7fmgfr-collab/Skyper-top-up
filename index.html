@@ -1,0 +1,58 @@
+function doGet(e) {
+  // បើមានការផ្ញើ Parameter id និង zone មក ឱ្យធ្វើការ Check ឈ្មោះ MLBB
+  if (e && e.parameter && e.parameter.id && e.parameter.zone) {
+    var userId = e.parameter.id;
+    var zoneId = e.parameter.zone;
+    
+    try {
+      var url = "https://api.vyturex.com/mlbb?id=" + userId + "&zone=" + zoneId;
+      var response = UrlFetchApp.fetch(url, { muteHttpExceptions: true });
+      var data = JSON.parse(response.getContentText());
+      
+      return ContentService.createTextOutput(JSON.stringify(data))
+        .setMimeType(ContentService.MimeType.JSON);
+    } catch (err) {
+      return ContentService.createTextOutput(JSON.stringify({ error: "Unable to check name" }))
+        .setMimeType(ContentService.MimeType.JSON);
+    }
+  }
+
+  // ប្រសិនបើគ្មាន Parameter ទេ ឱ្យទាញយកបញ្ជីស្តុកធម្មតា
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  var data = sheet.getDataRange().getValues();
+  var result = [];
+  
+  for (var i = 1; i < data.length; i++) {
+    result.push({
+      id: data[i][0],
+      name: data[i][1],
+      stock: data[i][2],
+      price: data[i][3]
+    });
+  }
+  
+  return ContentService.createTextOutput(JSON.stringify(result))
+    .setMimeType(ContentService.MimeType.JSON);
+}
+
+function doPost(e) {
+  var params = JSON.parse(e.postData.contents);
+  var packageId = params.packageId;
+  
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  var data = sheet.getDataRange().getValues();
+  
+  for (var i = 1; i < data.length; i++) {
+    if (data[i][0] == packageId) {
+      var currentStock = data[i][2];
+      if (currentStock > 0) {
+        sheet.getRange(i + 1, 3).setValue(currentStock - 1); // កាត់ស្តុក ១
+        return ContentService.createTextOutput(JSON.stringify({ status: "success", newStock: currentStock - 1 }))
+          .setMimeType(ContentService.MimeType.JSON);
+      } else {
+        return ContentService.createTextOutput(JSON.stringify({ status: "out_of_stock" }))
+          .setMimeType(ContentService.MimeType.JSON);
+      }
+    }
+  }
+}
