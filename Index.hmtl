@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Skyper Top UP</title>
+  <style>
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    html, body { width: 100%; height: 100%; margin: 0; padding: 0; background-color: #020617; font-family: -apple-system, sans-serif; }
+    .full-screen-wrapper { min-height: 100vh; width: 100%; display: flex; justify-content: center; align-items: center; padding: 12px; }
+    .card { background: #0f172a; color: white; padding: 20px 16px; border-radius: 20px; width: 100%; max-width: 400px; border: 1px solid #1e293b; }
+    input, select { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #334155; background: #0f172a; color: white; margin-top: 6px; }
+    .btn-pay { width: 100%; padding: 15px; background: linear-gradient(90deg, #38bdf8, #818cf8); color: white; font-weight: bold; font-size: 16px; border: none; border-radius: 12px; cursor: pointer; margin-top: 10px; }
+  </style>
+</head>
+<body>
+  <div class="full-screen-wrapper">
+    <div class="card">
+      <div style="text-align:center; margin-bottom:15px;">
+        <img src="https://i.ibb.co/rKxhRr2s/image.jpg" alt="Logo" style="width:100%; max-width:200px; border-radius:12px;">
+        <h2 style="color:#38bdf8; margin:8px 0 0 0;">✨ Skyper Top UP ✨</h2>
+        <p style="color:#94a3b8; font-size:12px;">បញ្ចូលពេជ្រ MLBB 24/7 💖</p>
+      </div>
+      <div style="background:#1e293b; padding:12px; border-radius:10px; margin-bottom:10px;">
+        <label style="font-size:13px;">១. ព័ត៌មាន Account</label>
+        <div style="display:flex; gap:8px;">
+          <input type="number" id="playerId" placeholder="User ID">
+          <input type="number" id="zoneId" placeholder="Zone ID">
+        </div>
+      </div>
+      <div style="background:#1e293b; padding:12px; border-radius:10px; margin-bottom:10px;">
+        <label style="font-size:13px;">២. ជ្រើសរើសកញ្ចប់</label>
+        <select id="package">
+          <option value="1.50">💎 86 Diamonds - $1.50</option>
+          <option value="3.00">💎 172 Diamonds - $3.00</option>
+          <option value="3.50">🛡️ Weekly Pass - $3.50</option>
+        </select>
+      </div>
+      <button onclick="generateQR()" class="btn-pay">ស្កែនទូទាត់ប្រាក់ (KHQR)</button>
+      <div id="paymentArea" style="display:none; margin-top:15px; text-align:center; background:#1e293b; padding:15px; border-radius:10px;">
+        <h3 style="color:#4ade80; margin:0;">ស្កែន QR Code ទូទាត់</h3>
+        <img id="qrImage" src="https://i.ibb.co/F4ZHRDv8/image.jpg" style="width:180px; margin:10px 0; border-radius:8px;">
+        <a id="telegramBtn" href="#" target="_blank" style="display:block; width:100%; padding:12px; background:#0284c7; color:white; font-weight:bold; text-decoration:none; border-radius:8px;">✈️ ផ្ញើបង្កាន់ដៃទៅ Telegram</a>
+      </div>
+    </div>
+  </div>
+  <script>
+    function generateQR() {
+      var id = document.getElementById('playerId').value;
+      var zone = document.getElementById('zoneId').value;
+      var pkg = document.getElementById('package').options[document.getElementById('package').selectedIndex].text;
+      if(!id || !zone) { alert('សូមបញ្ចូល User ID និង Zone ID!'); return; }
+      document.getElementById('paymentArea').style.display = 'block';
+      var msg = "ជម្រាបសួរ Skyper Top UP! ខ្ញុំបានទូទាត់រួចហើយ:%0A• ID: " + id + " (" + zone + ")%0A• កញ្ចប់: " + encodeURIComponent(pkg);
+      document.getElementById('telegramBtn').href = "https://t.me/sky_skyper?text=" + msg;
+    }
+  </script>
+</body>
+</html>
